@@ -14,7 +14,7 @@ git clone git@github.com:anastasia-martyniuk/scraping_zooplus.git
 python -m venv venv
 source venv/Scripts/activate(Windows OS) == source venv/bin/activate(MAC OS)
 pip install -r requirements.txt
-python main.py
+python parse.py
 ```
 
 After finishing "python main.py" you will see a file "doctors.csv" with all the necessary data.
