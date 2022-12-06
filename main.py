@@ -35,29 +35,46 @@ def parse_one_doctor(doctor) -> Doctor:
 
         one_day = doctor["open_time"][index + 1]
         if day["day"] == one_day["day"]:
-            open_time.update({f'{day["day"]}': f'{day["from"]}-{day["to"]}, {one_day["from"]}-{one_day["to"]}'})
+            open_time.update(
+                {
+                    f'{day["day"]}': f'{day["from"]}-{day["to"]}, {one_day["from"]}-{one_day["to"]}'
+                }
+            )
         else:
             open_time.update({f'{day["day"]}': f'{day["from"]}-{day["to"]}'})
 
     return Doctor(
         full_name=doctor["name"],
-        clinic=doctor["subtitle"] if "subtitle" in doctor else "sorry, we don't have this information",
+        clinic=doctor["subtitle"]
+        if "subtitle" in doctor
+        else "sorry, we don't have this information",
         open_time=open_time,
         address=doctor["address"],
         rating=doctor["avg_review_score"],
-        num_of_reviews=doctor["count_reviews"]
+        num_of_reviews=doctor["count_reviews"],
     )
 
 
 def get_doctors(num):
-    token = requests.get("https://www.zooplus.de/tierarzt/api/v2/token?debug=authReduxMiddleware-tokenIsExpired").json()["token"]
+    token = requests.get(
+        "https://www.zooplus.de/tierarzt/api/v2/token?debug=authReduxMiddleware-tokenIsExpired"
+    ).json()["token"]
     headers = {"authorization": f"Bearer {token}"}
 
     all_doctors = []
     attribute_from = 0
 
     for attribute_page in range(1, num):
-        page = requests.get("https://www.zooplus.de/tierarzt/api/v2/results", params={"animal_99": "true", "page": {attribute_page}, "from": {attribute_from}, "size": 20}, headers=headers)
+        page = requests.get(
+            "https://www.zooplus.de/tierarzt/api/v2/results",
+            params={
+                "animal_99": "true",
+                "page": {attribute_page},
+                "from": {attribute_from},
+                "size": 20,
+            },
+            headers=headers,
+        )
         content = page.json()
 
         attribute_from += 20
